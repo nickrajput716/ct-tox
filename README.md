@@ -411,26 +411,22 @@ model.save_models()
 *Modern landing page with animated particles background, featuring system overview, statistics, and recent predictions.*
 
 ### 2. 
-![Features Section](screenshots/2.png)
-*Showcasing key features including ML algorithms, real-time analysis, personalized results, and security measures.*
-
-### 3. 
 ![Prediction Form Step 1](screenshots/3.png)
 *Demographics input step with age and gender selection in a modern, user-friendly interface.*
 
-### 4. 
+### 3. 
 ![Prediction Form Step 2](screenshots/4.png)
 *Addiction information step featuring drug type selection, severity rating slider, and usage pattern inputs.*
 
-### 5.
+### 4.
 ![Prediction Form Step 3](screenshots/5.png)
 *Health status step with mental health assessment and recovery program selection with visual program cards.*
 
-### 6. 
+### 5. 
 ![Results Overview](screenshots/6.png)
 *Comprehensive results display showing recovery category, estimated timeline, and success animation.*
 
-### 7. 
+### 6. 
 ![Detailed Analysis](screenshots/7.png)
 *Detailed probability breakdown with visual charts, patient information summary, and export options.*
 
