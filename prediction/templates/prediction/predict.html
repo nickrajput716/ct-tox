@@ -1,0 +1,799 @@
+{% extends 'prediction/base.html' %}
+
+{% block title %}Make Prediction - RecoveryAI{% endblock %}
+
+{% block content %}
+<!-- Prediction Form Section -->
+<section class="predict-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <!-- Header -->
+                <div class="predict-header text-center" data-aos="fade-down">
+                    <div class="predict-icon-wrapper">
+                        <div class="predict-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                    </div>
+                    <h1 class="predict-title">AI Recovery Prediction</h1>
+                    <p class="predict-subtitle">Enter patient information for accurate recovery timeline prediction</p>
+                </div>
+
+                <!-- Form Card -->
+                <div class="predict-card" data-aos="fade-up" data-aos-delay="200">
+                    <form method="post" id="predictionForm">
+                        {% csrf_token %}
+                        
+                        <!-- Progress Steps -->
+                        <div class="form-progress">
+                            <div class="progress-step active" data-step="1">
+                                <div class="step-circle">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <span class="step-label">Demographics</span>
+                            </div>
+                            <div class="progress-line"></div>
+                            <div class="progress-step" data-step="2">
+                                <div class="step-circle">
+                                    <i class="fas fa-pills"></i>
+                                </div>
+                                <span class="step-label">Addiction Info</span>
+                            </div>
+                            <div class="progress-line"></div>
+                            <div class="progress-step" data-step="3">
+                                <div class="step-circle">
+                                    <i class="fas fa-heartbeat"></i>
+                                </div>
+                                <span class="step-label">Health Status</span>
+                            </div>
+                        </div>
+
+                        <!-- Step 1: Demographics -->
+                        <div class="form-step active" data-step="1">
+                            <div class="step-header">
+                                <h3><i class="fas fa-user-circle"></i> Patient Demographics</h3>
+                                <p>Basic patient information</p>
+                            </div>
+
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <div class="form-group-modern">
+                                        <label class="form-label-modern">
+                                            <i class="fas fa-calendar-alt"></i>
+                                            {{ form.age.label }}
+                                        </label>
+                                        {{ form.age }}
+                                        <div class="form-help">{{ form.age.help_text }}</div>
+                                        {% if form.age.errors %}
+                                            <div class="form-error">{{ form.age.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group-modern">
+                                        <label class="form-label-modern">
+                                            <i class="fas fa-venus-mars"></i>
+                                            {{ form.gender.label }}
+                                        </label>
+                                        {{ form.gender }}
+                                        <div class="form-help">{{ form.gender.help_text }}</div>
+                                        {% if form.gender.errors %}
+                                            <div class="form-error">{{ form.gender.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="step-actions">
+                                <button type="button" class="btn-step btn-next">
+                                    Next Step <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Addiction Info -->
+                        <div class="form-step" data-step="2">
+                            <div class="step-header">
+                                <h3><i class="fas fa-prescription-bottle"></i> Addiction Information</h3>
+                                <p>Details about substance use</p>
+                            </div>
+
+                            <div class="form-group-modern">
+                                <label class="form-label-modern">
+                                    <i class="fas fa-pills"></i>
+                                    {{ form.drug_type.label }}
+                                </label>
+                                {{ form.drug_type }}
+                                <div class="form-help">{{ form.drug_type.help_text }}</div>
+                                {% if form.drug_type.errors %}
+                                    <div class="form-error">{{ form.drug_type.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <div class="form-group-modern">
+                                        <label class="form-label-modern">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                            {{ form.addiction_severity.label }}
+                                        </label>
+                                        {{ form.addiction_severity }}
+                                        <div class="severity-indicator">
+                                            <span class="severity-label">Mild</span>
+                                            <div class="severity-bar">
+                                                <div class="severity-fill" id="severityFill"></div>
+                                            </div>
+                                            <span class="severity-label">Severe</span>
+                                        </div>
+                                        <div class="form-help">{{ form.addiction_severity.help_text }}</div>
+                                        {% if form.addiction_severity.errors %}
+                                            <div class="form-error">{{ form.addiction_severity.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group-modern">
+                                        <label class="form-label-modern">
+                                            <i class="fas fa-chart-line"></i>
+                                            {{ form.daily_usage.label }}
+                                        </label>
+                                        {{ form.daily_usage }}
+                                        <div class="form-help">{{ form.daily_usage.help_text }}</div>
+                                        {% if form.daily_usage.errors %}
+                                            <div class="form-error">{{ form.daily_usage.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group-modern">
+                                <label class="form-label-modern">
+                                    <i class="fas fa-clock"></i>
+                                    {{ form.years_using.label }}
+                                </label>
+                                {{ form.years_using }}
+                                <div class="form-help">{{ form.years_using.help_text }}</div>
+                                {% if form.years_using.errors %}
+                                    <div class="form-error">{{ form.years_using.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="step-actions">
+                                <button type="button" class="btn-step btn-prev">
+                                    <i class="fas fa-arrow-left"></i> Previous
+                                </button>
+                                <button type="button" class="btn-step btn-next">
+                                    Next Step <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Health Status -->
+                        <div class="form-step" data-step="3">
+                            <div class="step-header">
+                                <h3><i class="fas fa-heart-pulse"></i> Health & Treatment Status</h3>
+                                <p>Mental health and recovery program information</p>
+                            </div>
+
+                            <div class="form-group-modern">
+                                <label class="form-label-modern">
+                                    <i class="fas fa-brain"></i>
+                                    {{ form.mental_health_score.label }}
+                                </label>
+                                {{ form.mental_health_score }}
+                                <div class="mental-health-indicator">
+                                    <span class="mh-label">Poor</span>
+                                    <div class="mh-bar">
+                                        <div class="mh-fill" id="mentalHealthFill"></div>
+                                    </div>
+                                    <span class="mh-label">Excellent</span>
+                                </div>
+                                <div class="form-help">{{ form.mental_health_score.help_text }}</div>
+                                {% if form.mental_health_score.errors %}
+                                    <div class="form-error">{{ form.mental_health_score.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group-modern">
+                                <label class="form-label-modern">
+                                    <i class="fas fa-hospital"></i>
+                                    {{ form.recovery_program.label }}
+                                </label>
+                                {{ form.recovery_program }}
+                                <div class="form-help">{{ form.recovery_program.help_text }}</div>
+                                {% if form.recovery_program.errors %}
+                                    <div class="form-error">{{ form.recovery_program.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Program Info Cards -->
+                            <div class="program-info-grid">
+                                <div class="program-info-card">
+                                    <i class="fas fa-home"></i>
+                                    <h6>Outpatient</h6>
+                                    <p>Regular therapy sessions</p>
+                                </div>
+                                <div class="program-info-card">
+                                    <i class="fas fa-clinic-medical"></i>
+                                    <h6>Intensive</h6>
+                                    <p>9+ hours per week</p>
+                                </div>
+                                <div class="program-info-card">
+                                    <i class="fas fa-hospital-alt"></i>
+                                    <h6>Residential</h6>
+                                    <p>24/7 supervised care</p>
+                                </div>
+                                <div class="program-info-card">
+                                    <i class="fas fa-hands-helping"></i>
+                                    <h6>12-Step</h6>
+                                    <p>AA/NA support groups</p>
+                                </div>
+                            </div>
+
+                            <div class="step-actions">
+                                <button type="button" class="btn-step btn-prev">
+                                    <i class="fas fa-arrow-left"></i> Previous
+                                </button>
+                                <button type="submit" class="btn-step btn-submit">
+                                    <i class="fas fa-magic"></i> Generate Prediction
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Info Cards -->
+                <div class="row g-4 mt-4">
+                    <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                        <div class="info-card">
+                            <div class="info-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h5>Secure & Private</h5>
+                            <p>Your data is encrypted and protected</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4" data-aos="fade-up" data-aos-delay="400">
+                        <div class="info-card">
+                            <div class="info-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <h5>Instant Results</h5>
+                            <p>Get predictions in seconds</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4" data-aos="fade-up" data-aos-delay="500">
+                        <div class="info-card">
+                            <div class="info-icon">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <h5>95% Accurate</h5>
+                            <p>Powered by advanced ML algorithms</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+/* Prediction Page Styles */
+.predict-section {
+    padding: 120px 0 80px;
+    min-height: 100vh;
+}
+
+.predict-header {
+    margin-bottom: 50px;
+}
+
+.predict-icon-wrapper {
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.predict-icon {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: white;
+    animation: float 3s ease-in-out infinite;
+    box-shadow: 0 20px 40px rgba(139, 92, 246, 0.3);
+}
+
+.predict-title {
+    font-size: 3rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 15px;
+}
+
+.predict-subtitle {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+}
+
+.predict-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 30px;
+    padding: 50px;
+    box-shadow: var(--shadow-xl);
+    backdrop-filter: blur(10px);
+}
+
+/* Form Progress Steps */
+.form-progress {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 50px;
+    position: relative;
+}
+
+.progress-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    z-index: 2;
+}
+
+.step-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--bg-tertiary);
+    border: 3px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: var(--text-muted);
+    transition: var(--transition);
+}
+
+.progress-step.active .step-circle {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-color: var(--primary);
+    color: white;
+    box-shadow: 0 5px 20px rgba(139, 92, 246, 0.5);
+    animation: pulse 2s infinite;
+}
+
+.progress-step.completed .step-circle {
+    background: var(--success);
+    border-color: var(--success);
+    color: white;
+}
+
+.step-label {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.progress-step.active .step-label {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.progress-line {
+    flex: 1;
+    height: 3px;
+    background: var(--border-color);
+    position: relative;
+}
+
+.progress-line::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    transition: width 0.5s ease;
+}
+
+.progress-step.completed ~ .progress-line::after,
+.progress-step.active ~ .progress-line::after {
+    width: 100%;
+}
+
+/* Form Steps */
+.form-step {
+    display: none;
+}
+
+.form-step.active {
+    display: block;
+    animation: fadeInUp 0.5s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.step-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.step-header h3 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--text-primary);
+}
+
+.step-header h3 i {
+    color: var(--primary);
+    margin-right: 10px;
+}
+
+.step-header p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+/* Modern Form Groups */
+.form-group-modern {
+    margin-bottom: 30px;
+}
+
+.form-label-modern {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+}
+
+.form-label-modern i {
+    color: var(--primary);
+    margin-right: 8px;
+}
+
+.form-group-modern input,
+.form-group-modern select {
+    width: 100%;
+    padding: 15px 20px;
+    background: var(--bg-primary);
+    border: 2px solid var(--border-color);
+    border-radius: 15px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.form-group-modern input:focus,
+.form-group-modern select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+}
+
+.form-help {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.form-help::before {
+    content: 'ℹ️';
+}
+
+.form-error {
+    color: var(--danger);
+    font-size: 0.85rem;
+    margin-top: 8px;
+}
+
+/* Severity Indicator */
+.severity-indicator,
+.mental-health-indicator {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 15px 0;
+}
+
+.severity-bar,
+.mh-bar {
+    flex: 1;
+    height: 8px;
+    background: var(--bg-tertiary);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.severity-fill,
+.mh-fill {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, var(--success), var(--warning), var(--danger));
+    transition: width 0.3s ease;
+    border-radius: 10px;
+}
+
+.severity-label,
+.mh-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* Program Info Grid */
+.program-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.program-info-card {
+    background: var(--bg-primary);
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid var(--border-color);
+    text-align: center;
+    transition: var(--transition);
+}
+
+.program-info-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-5px);
+}
+
+.program-info-card i {
+    font-size: 2rem;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+.program-info-card h6 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.program-info-card p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+/* Step Actions */
+.step-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 2px solid var(--border-color);
+}
+
+.btn-step {
+    flex: 1;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-prev {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 2px solid var(--border-color);
+}
+
+.btn-prev:hover {
+    background: var(--bg-primary);
+    border-color: var(--primary);
+    transform: translateX(-5px);
+}
+
+.btn-next,
+.btn-submit {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+}
+
+.btn-next:hover,
+.btn-submit:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(139, 92, 246, 0.5);
+}
+
+.btn-submit {
+    background: linear-gradient(135deg, var(--success), var(--accent));
+}
+
+/* Info Cards */
+.info-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    transition: var(--transition);
+}
+
+.info-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--primary);
+    box-shadow: var(--shadow-xl);
+}
+
+.info-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.info-card h5 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.info-card p {
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .predict-card {
+        padding: 30px 20px;
+    }
+    
+    .form-progress {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .progress-line {
+        width: 3px;
+        height: 30px;
+        flex: none;
+    }
+    
+    .progress-line::after {
+        width: 100%;
+        height: 0;
+        transition: height 0.5s ease;
+    }
+    
+    .step-actions {
+        flex-direction: column;
+    }
+    
+    .predict-title {
+        font-size: 2rem;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const steps = document.querySelectorAll('.form-step');
+    const progressSteps = document.querySelectorAll('.progress-step');
+    let currentStep = 1;
+
+    // Next button handlers
+    document.querySelectorAll('.btn-next').forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (validateStep(currentStep)) {
+                goToStep(currentStep + 1);
+            }
+        });
+    });
+
+    // Previous button handlers
+    document.querySelectorAll('.btn-prev').forEach(btn => {
+        btn.addEventListener('click', () => {
+            goToStep(currentStep - 1);
+        });
+    });
+
+    function goToStep(step) {
+        steps.forEach(s => s.classList.remove('active'));
+        progressSteps.forEach(s => s.classList.remove('active'));
+        
+        if (step < currentStep) {
+            progressSteps.forEach((s, i) => {
+                if (i < step - 1) s.classList.add('completed');
+            });
+        }
+        
+        steps[step - 1].classList.add('active');
+        progressSteps[step - 1].classList.add('active');
+        
+        currentStep = step;
+        
+        // Scroll to top of form
+        document.querySelector('.predict-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function validateStep(step) {
+        const currentStepEl = steps[step - 1];
+        const inputs = currentStepEl.querySelectorAll('input, select');
+        let isValid = true;
+
+        inputs.forEach(input => {
+            if (input.hasAttribute('required') && !input.value) {
+                isValid = false;
+                input.style.borderColor = 'var(--danger)';
+            } else {
+                input.style.borderColor = 'var(--border-color)';
+            }
+        });
+
+        return isValid;
+    }
+
+    // Severity indicator
+    const severityInput = document.getElementById('id_addiction_severity');
+    const severityFill = document.getElementById('severityFill');
+    
+    if (severityInput && severityFill) {
+        severityInput.addEventListener('input', function() {
+            const value = this.value;
+            const percentage = (value / 10) * 100;
+            severityFill.style.width = percentage + '%';
+        });
+    }
+
+    // Mental health indicator
+    const mentalHealthInput = document.getElementById('id_mental_health_score');
+    const mentalHealthFill = document.getElementById('mentalHealthFill');
+    
+    if (mentalHealthInput && mentalHealthFill) {
+        mentalHealthInput.addEventListener('input', function() {
+            const value = this.value;
+            const percentage = (value / 10) * 100;
+            mentalHealthFill.style.width = percentage + '%';
+        });
+    }
+});
+</script>
+{% endblock %}
